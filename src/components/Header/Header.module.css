@@ -1,0 +1,22 @@
+.header {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.headerImage {
+    background-color: rgb(126, 183, 185);
+    background: url(../../assets/images/img1.jpg) center ;
+    background-size: 110%;
+    position: absolute;
+    top: -10%;
+    left: -5%;
+    right: -5%;
+    bottom: -5%;
+    z-index: -1;
+}
+

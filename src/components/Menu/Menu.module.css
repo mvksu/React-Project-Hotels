@@ -1,0 +1,25 @@
+.menuItem {
+    text-decoration: none;
+    display: inline-block;
+    text-align: left;  
+    color: #000;
+    border: none;
+    margin-left: 15px;
+    padding: 0;
+}
+.menuActiveItem {
+    text-decoration: underline;
+    color: rgb(49, 100, 167);
+}
+
+.menu {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menuContainer {
+    border: 1px solid #cdcdcd;
+    margin: 10px 0;
+}
