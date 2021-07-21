@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react";
 import LoadingButton from "../../../components/UI/LoadingButton/LoadingButton";
 import { validateEmail } from "../../../components/helpers/validateEmail";
+import useAuth from "../../../hooks/useAuth";
+import axios from "../../../axios-auth";
 
 export default function ProfilDetails() {
-
-    const [email, setEmail] = useState('mo@email.com')
+    const [auth, setAuth] = useAuth()
+    const [email, setEmail] = useState(auth.email)
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState({
@@ -13,31 +15,46 @@ export default function ProfilDetails() {
         password: ''
     })
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
         setLoading(true)
+        console.log(auth)
+        try {
+            const data = {
+                idToken: auth.token,
+                email: email,
+                returnSecureToken: true
+            }
+            if (password) data.password = password;
+            const res = await axios.post('accounts:update', data)
+            setAuth({
+                email: res.data.email,
+                token: res.data.idToken,
+                userId: res.data.localId
+            })
 
-        setTimeout(() => {
+        } catch (ex) {
+            console.log(ex.response)
+        }
 
-            setLoading(false)
-        }, 500)
+        setLoading(false)
     }
 
 
     useEffect(() => {
-        if(validateEmail(email)) {
-            setErrors({...errors, email: ''})
+        if (validateEmail(email)) {
+            setErrors({ ...errors, email: '' })
         } else {
-            setErrors({...errors, email: 'Niepoprawny email'})
+            setErrors({ ...errors, email: 'Niepoprawny email' })
         }
     }, [email])
 
     useEffect(() => {
-        if(password.length >= 4 || !password) {
-            setErrors({...errors, password: ''})
-        } 
+        if (password.length >= 4 || !password) {
+            setErrors({ ...errors, password: '' })
+        }
         else {
-            setErrors({...errors, password: 'Wymagane 4 znaki'})
+            setErrors({ ...errors, password: 'Wymagane 4 znaki' })
         }
     }, [password])
 
@@ -70,10 +87,10 @@ export default function ProfilDetails() {
                         Wymagane więcej niż 4 znaki
                     </div>
                 </div>
-                <LoadingButton 
-                loading={loading} 
-                label="Zapisz" 
-                disabled={errors.email || errors.password ? true : false}/>
+                <LoadingButton
+                    loading={loading}
+                    label="Zapisz"
+                    disabled={errors.email || errors.password ? true : false} />
 
             </form>
         </div>

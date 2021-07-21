@@ -56,12 +56,15 @@ const InputCheckbox = props => {
     const toggleFeature = e => {
         const value = e.target.value;
         const isChecked = e.target.checked;
+        const copied = props.values
 
         if (isChecked) {
-            const newFeatures = [...props.values, value]
+            console.log('checked', value)
+            const newFeatures = copied.concat(value)
             props.onChange(newFeatures)
         } else {
-            const newFeatures = [props.values.filter(x => x !== value)]
+            console.log('unchecked', value)
+            const newFeatures = props.values.filter(x => x !== value)
             props.onChange(newFeatures)
         }
 
@@ -71,17 +74,17 @@ const InputCheckbox = props => {
         <>
             <h3>{props.label}</h3>
             <div className="form-group">
-                {props.options.map(x =>
-                    <div className="form-check p-0" key={x.value}>
+                {props.options.map(opcja =>
+                    <div className="form-check p-0" key={opcja.value}>
                         <input
-                            onChange={e => toggleFeature(e)}
-                            value={x.value}
                             type='checkbox'
-                            checked={props.values.find(x => x === 'parking')}
                             className="mr-1"
-                            key={x.value}
+                            value={opcja.value}
+                            checked={props.values.find(x => x === opcja.value) ?? false}
+                            onChange={toggleFeature}
+                            key={opcja.value}
                         />
-                        <label>{x.label}</label>
+                        <label>{opcja.value}</label>
                     </div>
                 )}
 
@@ -142,6 +145,10 @@ export default function Input(props) {
     switch (props.type) {
         case 'select':
             return <InputSelect {...props} />
+        case 'password':
+            return <InputText {...props} type="password" />
+        case 'email':
+            return <InputText {...props} type="email" />
         case 'checkbox':
             return <InputCheckbox {...props} />
         case 'file':

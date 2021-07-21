@@ -11,6 +11,9 @@ const avaliableRules = {
   },
   min(value, rule) {
     return value.length > rule.length ? '' : `Min. ${rule.length} znaków`
+  },
+  email(value) {
+    return validateEmail(value) ? '' : 'Niepoprawny email'
   }
 }
 

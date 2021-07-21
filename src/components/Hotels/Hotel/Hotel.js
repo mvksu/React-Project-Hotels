@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import { useContext } from 'react';
-import img from '../../../assets/images/img2.jpg'
 import ThemeContext from '../../context/themeContext';
 import useAuth from '../../../hooks/useAuth';
 import { Link } from 'react-router-dom';
@@ -8,7 +7,7 @@ import { Link } from 'react-router-dom';
 const propTypes = {
     name: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
+    rating: PropTypes.number,
     description: PropTypes.string.isRequired,
 };
 
@@ -18,8 +17,9 @@ function Hotel(props) {
     const theme = useContext(ThemeContext)
 
     const clickHandler = (e) => {
-        props.onOpen(props);
-        console.log("from click, ", props)
+        if (props.onOpen) {
+            props.onOpen(props);
+        }
     }
 
     return (
@@ -28,7 +28,7 @@ function Hotel(props) {
                 <div className="row">
                     <div className="col-4">
                         <img
-                            src={img}
+                            src={`https://placeimg.com/220/18${Math.floor(Math.random() * 10)}`}
                             alt=""
                             className="img-fluid img-thumbnail" />
                     </div>
@@ -39,7 +39,7 @@ function Hotel(props) {
                                 <span className="badge badge-info">{props.city}</span>
                             </div>
                             <div className="col text-right">
-                                <h5>Ocena: {props.rating}</h5>
+                                <h5>Ocena: {props.rating ?? 0}</h5>
                                 <p>Opinie: <span className="badge badge-secondary"></span></p>
                                 <Link
                                     to={`hotele/${props.id}`}
@@ -54,7 +54,7 @@ function Hotel(props) {
                         <p className="text-secondary mb-0">{props.description}</p>
 
                         {auth
-                            ? <p className="mt-2">Dostępność: 4 pokoje wolne</p>
+                            ? <p className="mt-2">Dostępność: {props.rooms} pokoje wolne</p>
                             : <p className="mt-2">Dostępność: Zaloguj się, żeby zobaczyć</p>
                         }
 

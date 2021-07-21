@@ -6,11 +6,6 @@ function Menu() {
     //const auth = useContext(AuthContext)
     const [auth, setAuth] = useAuth();
 
-    const login = (e) => {
-        e.preventDefault();
-        setAuth(true)
-    }
-
     const logout = (e) => {
         e.preventDefault();
         setAuth(false)
@@ -35,8 +30,20 @@ function Menu() {
                             <button onClick={logout} className={styles.menuItem}>Wyloguj</button>
                         </li>
                     </>)
-                    : <button className={styles.menuItem}
-                        onClick={login}>Zaloguj</button>}
+                    :
+                    (<>
+                        <NavLink
+                            to="/rejestracja"
+                            className={styles.menuItem}
+                            activeClassName={styles.menuActiveItem}>Zarejestruj się
+                        </NavLink>
+                        <NavLink
+                            to="/zaloguj"
+                            className={styles.menuItem}
+                            activeClassName={styles.menuActiveItem}>Zaloguj
+                        </NavLink>
+                    </>)
+                }
             </ul>
         </div>
     )

@@ -20,12 +20,15 @@ import Login from './pages/Auth/Login/Login';
 import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
 import ErrorBoundary from './components/hoc/ErrorBoundary';
 import AddHotel from './pages/Profile/MyHotels/AddHotel/AddHotel';
+import EditHotel from './pages/Profile/MyHotels/EditHotel/EditHotel';
+import Register from './pages/Auth/Register/Register';
 
 
 const Profile = lazy(() => import('./pages/Profile/Profile'));
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
 
   const header = (
     <Header>
@@ -38,10 +41,12 @@ function App() {
       <ErrorBoundary>
         <Suspense fallback={<p>Ładowanie...</p>}>
           <Switch>
+            <AuthenticatedRoute path="/profil/hotele/edytuj/:id" component={EditHotel} />
             <AuthenticatedRoute path="/profil/hotele/dodaj" component={AddHotel} />
             <AuthenticatedRoute path='/profil' component={Profile} />
             <Route path="/hotele/:id" component={HotelDetail} />
             <Route path="/wyszukaj/:term?" component={Search} />
+            <Route path="/rejestracja" component={Register} />
             <Route path="/zaloguj" exact component={Login} />
             <Route path="/" exact component={Home} />
             <Route component={NotFound} />
@@ -56,8 +61,8 @@ function App() {
   return (
     <Router>
       <AuthContext.Provider value={{
-        isAuthenticated: state.isAuthenticated,
-        login: () => dispatch({ type: 'login' }),
+        user: state.user,
+        login: (user) => dispatch({ type: 'login', user }),
         logout: () => dispatch({ type: 'logout' }),
       }}>
         <ThemeContext.Provider value={{

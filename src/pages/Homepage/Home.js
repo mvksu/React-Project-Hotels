@@ -5,31 +5,15 @@ import BestHotel from '../../components/Hotels/BestHotel/BestHotel';
 import Hotels from '../../components/Hotels/Hotels';
 import { useEffect, useState } from "react";
 import LoadingIcon from '../../components/UI/LoadingIcon/LoadingIcon'
-
-
-const defaulthotels = [{
-    id: 1,
-    name: 'Pensjonat 1',
-    city: 'Warszawa',
-    rating: 7.7,
-    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unkn ",
-    image: ""
-},
-{
-    id: 2,
-    name: 'Hotel 1',
-    city: 'Gdańsk',
-    rating: 8.8,
-    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a ",
-    image: ""
-}];
+import { objectsToArrayWithID } from '../../components/helpers/objects'
+import axios from '../../axios';
 
 
 export default function Home(props) {
+    useWebsiteTitle('Stona główna');
     const [lastHotel, setLastHotel] = useLocalStorage('last-hotel', null)
     const [loading, setLoading] = useState(true);
     const [hotels, setHotels] = useState([])
-    useWebsiteTitle('Stona główna');
     
     const getBestHotel = () => {
         if (hotels.length < 2) {
@@ -45,14 +29,22 @@ export default function Home(props) {
     }
     const removeHotel = () => setLastHotel(null)
 
-    useEffect(() => {  
-        setTimeout(() => {
-            setHotels(defaulthotels);
-            setLoading(false);
-        }, 1000)
-        console.log('component mounted')
+    const fetchHotels = async () => {
+        try {
+            const res = await axios.get('/hotels.json')
+            const newHotels = objectsToArrayWithID(res.data).filter(hotel => hotel.status === "1")
+            console.log('new hotels')
+            console.log(newHotels)
+            setHotels(newHotels)
+            setLoading(false)
+        } catch (ex) {
+            console.log(ex.response)
+        }
+    }
+    useEffect(() => {
+        fetchHotels()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [])
 
     return (
         <>

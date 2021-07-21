@@ -6,15 +6,16 @@ export const reducer = (state, action) => {
           theme: state.theme === 'danger' ? 'primary' : 'danger'
         };
       case 'login':
-        return { ...state, isAuthenticated: true };
+        return { ...state, user: action.user };
       case 'logout':
-        return { ...state, isAuthenticated: false };
+        return { ...state, user: null };
       default:
         throw console.error("nie ma takiej akcji");
     }
   }
-  
+
   export const initialState = {
-    isAuthenticated: false,
+    user: JSON.parse(window.localStorage.getItem('token-data')) ?? null,
     theme: 'danger'
   }
+
